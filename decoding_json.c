@@ -255,8 +255,10 @@ static void pg_decode_change(LogicalDecodingContext* ctx, ReorderBufferTXN* txn,
 
   MemoryContextSwitchTo(old);
   MemoryContextReset(data->context);
-
-  OutputPluginWrite(ctx, true);
+  
+  if (relation->rd_rel->relreplident == REPLICA_IDENTITY_DEFAULT ||relation->rd_rel->relreplident == REPLICA_IDENTITY_FULL || relation->rd_rel->relreplident == REPLICA_IDENTITY_INDEX) {
+        OutputPluginWrite(ctx, true);
+  }
 }
 
 /* adapted from test_decoding.c */
